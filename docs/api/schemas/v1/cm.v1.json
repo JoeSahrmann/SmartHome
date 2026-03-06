@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://smarthome.local/schemas/v1/cm.v1.json",
+  "title": "CM Calendar Month Contract v1",
+  "type": "object",
+  "required": ["request", "response"],
+  "properties": {
+    "request": {
+      "type": "object",
+      "required": ["query"],
+      "properties": {
+        "query": {
+          "type": "object",
+          "required": ["householdId", "month"],
+          "properties": {
+            "householdId": { "$ref": "common.v1.json#/$defs/Id" },
+            "month": { "$ref": "common.v1.json#/$defs/YearMonth" },
+            "include": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["chores", "menu", "habits", "briefings"]
+              },
+              "uniqueItems": true
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "response": {
+      "type": "object",
+      "required": ["month", "timezone", "weeks"],
+      "properties": {
+        "month": { "$ref": "common.v1.json#/$defs/YearMonth" },
+        "timezone": { "$ref": "common.v1.json#/$defs/Timezone" },
+        "weeks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["days"],
+            "properties": {
+              "days": {
+                "type": "array",
+                "minItems": 7,
+                "maxItems": 7,
+                "items": {
+                  "type": "object",
+                  "required": ["date", "inMonth", "summaries"],
+                  "properties": {
+                    "date": { "$ref": "common.v1.json#/$defs/Date" },
+                    "inMonth": { "type": "boolean" },
+                    "summaries": { "type": "object" }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

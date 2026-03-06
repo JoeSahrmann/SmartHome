@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://smarthome.local/schemas/v1/cco.v1.json",
+  "title": "CCO Complete Chore Once Contract v1",
+  "type": "object",
+  "required": ["request", "response", "idempotency"],
+  "properties": {
+    "idempotency": {
+      "type": "object",
+      "required": ["required", "keyHeader", "ttlHours"],
+      "properties": {
+        "required": { "const": true },
+        "keyHeader": { "const": "Idempotency-Key" },
+        "ttlHours": { "const": 24 }
+      },
+      "additionalProperties": false
+    },
+    "request": {
+      "type": "object",
+      "required": ["headers", "body"],
+      "properties": {
+        "headers": {
+          "type": "object",
+          "required": ["Idempotency-Key"],
+          "properties": {
+            "Idempotency-Key": { "$ref": "common.v1.json#/$defs/IdempotencyKey" },
+            "X-Timezone": { "$ref": "common.v1.json#/$defs/Timezone" }
+          },
+          "additionalProperties": true
+        },
+        "body": {
+          "type": "object",
+          "required": ["householdId", "choreId", "completedBy", "date"],
+          "properties": {
+            "householdId": { "$ref": "common.v1.json#/$defs/Id" },
+            "choreId": { "$ref": "common.v1.json#/$defs/Id" },
+            "completedBy": { "$ref": "common.v1.json#/$defs/Id" },
+            "date": { "$ref": "common.v1.json#/$defs/Date" },
+            "note": { "type": "string", "maxLength": 500 }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "response": {
+      "type": "object",
+      "required": ["completionId", "choreId", "date", "completedAt", "completedBy", "status"],
+      "properties": {
+        "completionId": { "$ref": "common.v1.json#/$defs/Id" },
+        "choreId": { "$ref": "common.v1.json#/$defs/Id" },
+        "date": { "$ref": "common.v1.json#/$defs/Date" },
+        "completedAt": { "$ref": "common.v1.json#/$defs/Timestamp" },
+        "completedBy": { "$ref": "common.v1.json#/$defs/Id" },
+        "status": { "type": "string", "enum": ["created", "already_completed"] }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

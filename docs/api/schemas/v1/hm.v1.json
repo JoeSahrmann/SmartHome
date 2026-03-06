@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://smarthome.local/schemas/v1/hm.v1.json",
+  "title": "HM Habit Metrics Contract v1",
+  "type": "object",
+  "required": ["request", "response", "timeHandling"],
+  "properties": {
+    "timeHandling": {
+      "type": "object",
+      "required": ["timezoneRequired", "weekStartDay"],
+      "properties": {
+        "timezoneRequired": { "const": true },
+        "weekStartDay": { "const": "monday" }
+      },
+      "additionalProperties": false
+    },
+    "request": {
+      "type": "object",
+      "required": ["headers", "query"],
+      "properties": {
+        "headers": {
+          "type": "object",
+          "required": ["X-Timezone"],
+          "properties": {
+            "X-Timezone": { "$ref": "common.v1.json#/$defs/Timezone" }
+          },
+          "additionalProperties": true
+        },
+        "query": {
+          "type": "object",
+          "required": ["householdId", "userId", "weekStart"],
+          "properties": {
+            "householdId": { "$ref": "common.v1.json#/$defs/Id" },
+            "userId": { "$ref": "common.v1.json#/$defs/Id" },
+            "weekStart": { "$ref": "common.v1.json#/$defs/Date" },
+            "includeDaily": { "type": "boolean", "default": false }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "response": {
+      "type": "object",
+      "required": ["householdId", "userId", "weekStart", "weekEnd", "timezone", "completionRate", "streaks"],
+      "properties": {
+        "householdId": { "$ref": "common.v1.json#/$defs/Id" },
+        "userId": { "$ref": "common.v1.json#/$defs/Id" },
+        "weekStart": { "$ref": "common.v1.json#/$defs/Date" },
+        "weekEnd": { "$ref": "common.v1.json#/$defs/Date" },
+        "timezone": { "$ref": "common.v1.json#/$defs/Timezone" },
+        "completionRate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "streaks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["habitId", "current"],
+            "properties": {
+              "habitId": { "$ref": "common.v1.json#/$defs/Id" },
+              "current": { "type": "integer", "minimum": 0 },
+              "best": { "type": "integer", "minimum": 0 }
+            },
+            "additionalProperties": false
+          }
+        },
+        "daily": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["date", "completed", "target"],
+            "properties": {
+              "date": { "$ref": "common.v1.json#/$defs/Date" },
+              "completed": { "type": "integer", "minimum": 0 },
+              "target": { "type": "integer", "minimum": 0 }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

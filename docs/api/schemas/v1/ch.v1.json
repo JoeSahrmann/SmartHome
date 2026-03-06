@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://smarthome.local/schemas/v1/ch.v1.json",
+  "title": "CH Chore History Contract v1",
+  "type": "object",
+  "required": ["request", "response"],
+  "properties": {
+    "request": {
+      "type": "object",
+      "required": ["query"],
+      "properties": {
+        "query": {
+          "type": "object",
+          "required": ["householdId", "from", "to"],
+          "properties": {
+            "householdId": { "$ref": "common.v1.json#/$defs/Id" },
+            "from": { "$ref": "common.v1.json#/$defs/Date" },
+            "to": { "$ref": "common.v1.json#/$defs/Date" },
+            "choreId": { "$ref": "common.v1.json#/$defs/Id" },
+            "assigneeId": { "$ref": "common.v1.json#/$defs/Id" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "response": {
+      "type": "object",
+      "required": ["householdId", "from", "to", "entries"],
+      "properties": {
+        "householdId": { "$ref": "common.v1.json#/$defs/Id" },
+        "from": { "$ref": "common.v1.json#/$defs/Date" },
+        "to": { "$ref": "common.v1.json#/$defs/Date" },
+        "entries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["completionId", "choreId", "choreName", "date", "completedAt", "completedBy"],
+            "properties": {
+              "completionId": { "$ref": "common.v1.json#/$defs/Id" },
+              "choreId": { "$ref": "common.v1.json#/$defs/Id" },
+              "choreName": { "type": "string" },
+              "date": { "$ref": "common.v1.json#/$defs/Date" },
+              "completedAt": { "$ref": "common.v1.json#/$defs/Timestamp" },
+              "completedBy": { "$ref": "common.v1.json#/$defs/Id" }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://smarthome.local/schemas/v1/hbf.v1.json",
+  "title": "HBF Habit Button Fire Contract v1",
+  "type": "object",
+  "required": ["request", "response", "idempotency"],
+  "properties": {
+    "idempotency": {
+      "type": "object",
+      "required": ["required", "keyHeader", "ttlHours"],
+      "properties": {
+        "required": { "const": true },
+        "keyHeader": { "const": "Idempotency-Key" },
+        "ttlHours": { "const": 24 }
+      },
+      "additionalProperties": false
+    },
+    "request": {
+      "type": "object",
+      "required": ["headers", "body"],
+      "properties": {
+        "headers": {
+          "type": "object",
+          "required": ["Idempotency-Key", "X-Timezone"],
+          "properties": {
+            "Idempotency-Key": { "$ref": "common.v1.json#/$defs/IdempotencyKey" },
+            "X-Timezone": { "$ref": "common.v1.json#/$defs/Timezone" }
+          },
+          "additionalProperties": true
+        },
+        "body": {
+          "type": "object",
+          "required": ["householdId", "userId", "habitId", "occurredAt"],
+          "properties": {
+            "householdId": { "$ref": "common.v1.json#/$defs/Id" },
+            "userId": { "$ref": "common.v1.json#/$defs/Id" },
+            "habitId": { "$ref": "common.v1.json#/$defs/Id" },
+            "occurredAt": { "$ref": "common.v1.json#/$defs/Timestamp" },
+            "clientEventId": { "$ref": "common.v1.json#/$defs/Id" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "response": {
+      "type": "object",
+      "required": ["eventId", "habitId", "userId", "countedDate", "recordedAt", "status"],
+      "properties": {
+        "eventId": { "$ref": "common.v1.json#/$defs/Id" },
+        "habitId": { "$ref": "common.v1.json#/$defs/Id" },
+        "userId": { "$ref": "common.v1.json#/$defs/Id" },
+        "countedDate": { "$ref": "common.v1.json#/$defs/Date" },
+        "recordedAt": { "$ref": "common.v1.json#/$defs/Timestamp" },
+        "status": { "type": "string", "enum": ["recorded", "duplicate"] }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
